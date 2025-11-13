@@ -1,6 +1,7 @@
+
 [workspace]
 members = ["expert_prompt_engineer"]
-exclude = ["marqant"]  # Marqant is a git submodule with its own Cargo.toml
+exclude = ["marqant","codexist"]  # Marqant is a git submodule with its own Cargo.toml
 
 [package]
 name = "st"
