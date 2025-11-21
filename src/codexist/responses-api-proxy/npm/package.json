@@ -1,0 +1,21 @@
+{
+  "name": "@openai/codexist-responses-api-proxy",
+  "version": "0.0.0-dev",
+  "license": "Apache-2.0",
+  "bin": {
+    "codexist-responses-api-proxy": "bin/codexist-responses-api-proxy.js"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "bin",
+    "vendor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openai/codexist.git",
+    "directory": "codexist-rs/responses-api-proxy/npm"
+  }
+}

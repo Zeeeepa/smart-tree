@@ -1,0 +1,54 @@
+[package]
+edition = "2024"
+name = "codexist-app-server"
+version = { workspace = true }
+
+[[bin]]
+name = "codexist-app-server"
+path = "src/main.rs"
+
+[lib]
+name = "codexist_app_server"
+path = "src/lib.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+codexist-arg0 = { workspace = true }
+codexist-common = { workspace = true, features = ["cli"] }
+codexist-core = { workspace = true }
+codexist-backend-client = { workspace = true }
+codexist-file-search = { workspace = true }
+codexist-login = { workspace = true }
+codexist-protocol = { workspace = true }
+codexist-app-server-protocol = { workspace = true }
+codexist-feedback = { workspace = true }
+codexist-utils-json-to-toml = { workspace = true }
+chrono = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+tokio = { workspace = true, features = [
+    "io-std",
+    "macros",
+    "process",
+    "rt-multi-thread",
+    "signal",
+] }
+tracing = { workspace = true, features = ["log"] }
+tracing-subscriber = { workspace = true, features = ["env-filter", "fmt"] }
+opentelemetry-appender-tracing = { workspace = true }
+uuid = { workspace = true, features = ["serde", "v7"] }
+
+[dev-dependencies]
+app_test_support = { workspace = true }
+assert_cmd = { workspace = true }
+base64 = { workspace = true }
+core_test_support = { workspace = true }
+os_info = { workspace = true }
+pretty_assertions = { workspace = true }
+serial_test = { workspace = true }
+tempfile = { workspace = true }
+toml = { workspace = true }
+wiremock = { workspace = true }

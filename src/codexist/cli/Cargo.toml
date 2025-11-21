@@ -1,0 +1,61 @@
+[package]
+edition = "2024"
+name = "codexist-cli"
+version = { workspace = true }
+
+[[bin]]
+name = "codexist"
+path = "src/main.rs"
+
+[lib]
+name = "codexist_cli"
+path = "src/lib.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+clap_complete = { workspace = true }
+codexist-app-server = { workspace = true }
+codexist-app-server-protocol = { workspace = true }
+codexist-arg0 = { workspace = true }
+codexist-chatgpt = { workspace = true }
+codexist-cloud-tasks = { path = "../cloud-tasks" }
+codexist-common = { workspace = true, features = ["cli"] }
+codexist-core = { workspace = true }
+codexist-exec = { workspace = true }
+codexist-login = { workspace = true }
+codexist-mcp-server = { workspace = true }
+codexist-process-hardening = { workspace = true }
+codexist-protocol = { workspace = true }
+codexist-responses-api-proxy = { workspace = true }
+codexist-rmcp-client = { workspace = true }
+codexist-stdio-to-uds = { workspace = true }
+codexist-tui = { workspace = true }
+ctor = { workspace = true }
+libc = { workspace = true }
+owo-colors = { workspace = true }
+regex-lite = { workspace = true}
+serde_json = { workspace = true }
+supports-color = { workspace = true }
+toml = { workspace = true }
+tokio = { workspace = true, features = [
+    "io-std",
+    "macros",
+    "process",
+    "rt-multi-thread",
+    "signal",
+] }
+tracing = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+codexist_windows_sandbox = { package = "codexist-windows-sandbox", path = "../windows-sandbox-rs" }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+assert_matches = { workspace = true }
+predicates = { workspace = true }
+pretty_assertions = { workspace = true }
+tempfile = { workspace = true }

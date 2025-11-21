@@ -1,0 +1,98 @@
+# Codexist CLI (Rust Implementation)
+
+We provide Codexist CLI as a standalone, native executable to ensure a zero-dependency install.
+
+## Installing Codexist
+
+Today, the easiest way to install Codexist is via `npm`:
+
+```shell
+npm i -g @openai/codexist
+codexist
+```
+
+You can also install via Homebrew (`brew install --cask codexist`) or download a platform-specific release directly from our [GitHub Releases](https://github.com/openai/codexist/releases).
+
+## Documentation quickstart
+
+- First run with Codexist? Follow the walkthrough in [`docs/getting-started.md`](../docs/getting-started.md) for prompts, keyboard shortcuts, and session management.
+- Already shipping with Codexist and want deeper control? Jump to [`docs/advanced.md`](../docs/advanced.md) and the configuration reference at [`docs/config.md`](../docs/config.md).
+
+## What's new in the Rust CLI
+
+The Rust implementation is now the maintained Codexist CLI and serves as the default experience. It includes a number of features that the legacy TypeScript CLI never supported.
+
+### Config
+
+Codexist supports a rich set of configuration options. Note that the Rust CLI uses `config.toml` instead of `config.json`. See [`docs/config.md`](../docs/config.md) for details.
+
+### Model Context Protocol Support
+
+#### MCP client
+
+Codexist CLI functions as an MCP client that allows the Codexist CLI and IDE extension to connect to MCP servers on startup. See the [`configuration documentation`](../docs/config.md#mcp_servers) for details.
+
+#### MCP server (experimental)
+
+Codexist can be launched as an MCP _server_ by running `codexist mcp-server`. This allows _other_ MCP clients to use Codexist as a tool for another agent.
+
+Use the [`@modelcontextprotocol/inspector`](https://github.com/modelcontextprotocol/inspector) to try it out:
+
+```shell
+npx @modelcontextprotocol/inspector codexist mcp-server
+```
+
+Use `codexist mcp` to add/list/get/remove MCP server launchers defined in `config.toml`, and `codexist mcp-server` to run the MCP server directly.
+
+### Notifications
+
+You can enable notifications by configuring a script that is run whenever the agent finishes a turn. The [notify documentation](../docs/config.md#notify) includes a detailed example that explains how to get desktop notifications via [terminal-notifier](https://github.com/julienXX/terminal-notifier) on macOS.
+
+### `codexist exec` to run Codexist programmatically/non-interactively
+
+To run Codexist non-interactively, run `codexist exec PROMPT` (you can also pass the prompt via `stdin`) and Codexist will work on your task until it decides that it is done and exits. Output is printed to the terminal directly. You can set the `RUST_LOG` environment variable to see more about what's going on.
+
+### Experimenting with the Codexist Sandbox
+
+To test to see what happens when a command is run under the sandbox provided by Codexist, we provide the following subcommands in Codexist CLI:
+
+```
+# macOS
+codexist sandbox macos [--full-auto] [--log-denials] [COMMAND]...
+
+# Linux
+codexist sandbox linux [--full-auto] [COMMAND]...
+
+# Windows
+codexist sandbox windows [--full-auto] [COMMAND]...
+
+# Legacy aliases
+codexist debug seatbelt [--full-auto] [--log-denials] [COMMAND]...
+codexist debug landlock [--full-auto] [COMMAND]...
+```
+
+### Selecting a sandbox policy via `--sandbox`
+
+The Rust CLI exposes a dedicated `--sandbox` (`-s`) flag that lets you pick the sandbox policy **without** having to reach for the generic `-c/--config` option:
+
+```shell
+# Run Codexist with the default, read-only sandbox
+codexist --sandbox read-only
+
+# Allow the agent to write within the current workspace while still blocking network access
+codexist --sandbox workspace-write
+
+# Danger! Disable sandboxing entirely (only do this if you are already running in a container or other isolated env)
+codexist --sandbox danger-full-access
+```
+
+The same setting can be persisted in `~/.codexist/config.toml` via the top-level `sandbox_mode = "MODE"` key, e.g. `sandbox_mode = "workspace-write"`.
+
+## Code Organization
+
+This folder is the root of a Cargo workspace. It contains quite a bit of experimental code, but here are the key crates:
+
+- [`core/`](./core) contains the business logic for Codexist. Ultimately, we hope this to be a library crate that is generally useful for building other Rust/native applications that use Codexist.
+- [`exec/`](./exec) "headless" CLI for use in automation.
+- [`tui/`](./tui) CLI that launches a fullscreen TUI built with [Ratatui](https://ratatui.rs/).
+- [`cli/`](./cli) CLI multitool that provides the aforementioned CLIs via subcommands.
